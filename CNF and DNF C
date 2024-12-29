@@ -1,0 +1,128 @@
+1. CNF:
+
+#include <stdio.h>
+#include <string.h>
+
+// Function to apply De Morgan's Laws
+void applyDeMorgan(char *expression) {
+    char temp[100];
+    strcpy(temp, expression);
+
+    // Replace !(A|B) with (!A&!B)
+    char *pos = strstr(temp, "!(A|B)");
+    if (pos != NULL) {
+        strncpy(expression, temp, pos - temp);
+        expression[pos - temp] = '\0';
+        strcat(expression, "(!A&!B)");
+        strcat(expression, pos + strlen("!(A|B)"));
+    }
+
+    // Replace !(A&B) with (!A|!B)
+    pos = strstr(expression, "!(A&B)");
+    if (pos != NULL) {
+        strncpy(temp, expression, pos - expression);
+        temp[pos - expression] = '\0';
+        strcat(temp, "(!A|!B)");
+        strcat(temp, pos + strlen("!(A&B)"));
+        strcpy(expression, temp);
+    }
+}
+
+// Function to distribute OR over AND
+void distributeOrOverAnd(char *expression) {
+    char temp[100];
+    strcpy(temp, expression);
+
+    // Replace A|(B&C) with (A|B)&(A|C)
+    char *pos = strstr(temp, "A|(B&C)");
+    if (pos != NULL) {
+        strncpy(expression, temp, pos - temp);
+        expression[pos - temp] = '\0';
+        strcat(expression, "(A|B)&(A|C)");
+        strcat(expression, pos + strlen("A|(B&C)"));
+    }
+}
+
+// Function to convert to CNF
+void convertToCNF(char *expression) {
+    applyDeMorgan(expression);
+    distributeOrOverAnd(expression);
+}
+
+int main() {
+    char expression[100];
+
+    printf("Enter a logical expression (e.g., A|(B&C)): ");
+    scanf("%[^\n]s", expression);
+
+    convertToCNF(expression);
+
+    printf("CNF Form: %s\n", expression);
+
+    return 0;
+}
+
+
+2. DNF:
+
+#include <stdio.h>
+#include <string.h>
+
+// Function to apply De Morgan's Laws
+void applyDeMorganDNF(char *expression) {
+    char temp[100];
+    strcpy(temp, expression);
+
+    // Replace !(A|B) with (!A&!B)
+    char *pos = strstr(temp, "!(A|B)");
+    if (pos != NULL) {
+        strncpy(expression, temp, pos - temp);
+        expression[pos - temp] = '\0';
+        strcat(expression, "(!A&!B)");
+        strcat(expression, pos + strlen("!(A|B)"));
+    }
+
+    // Replace !(A&B) with (!A|!B)
+    pos = strstr(expression, "!(A&B)");
+    if (pos != NULL) {
+        strncpy(temp, expression, pos - expression);
+        temp[pos - expression] = '\0';
+        strcat(temp, "(!A|!B)");
+        strcat(temp, pos + strlen("!(A&B)"));
+        strcpy(expression, temp);
+    }
+}
+
+// Function to distribute AND over OR
+void distributeAndOverOr(char *expression) {
+    char temp[100];
+    strcpy(temp, expression);
+
+    // Replace A&(B|C) with (A&B)|(A&C)
+    char *pos = strstr(temp, "A&(B|C)");
+    if (pos != NULL) {
+        strncpy(expression, temp, pos - temp);
+        expression[pos - temp] = '\0';
+        strcat(expression, "(A&B)|(A&C)");
+        strcat(expression, pos + strlen("A&(B|C)"));
+    }
+}
+
+// Function to convert to DNF
+void convertToDNF(char *expression) {
+    applyDeMorganDNF(expression);
+    distributeAndOverOr(expression);
+}
+
+int main() {
+    char expression[100];
+
+    printf("Enter a logical expression (e.g., A&(B|C)): ");
+    scanf("%[^\n]s", expression);
+
+    convertToDNF(expression);
+
+    printf("DNF Form: %s\n", expression);
+
+    return 0;
+}

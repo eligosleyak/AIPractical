@@ -1,0 +1,120 @@
+1. CNF:
+
+import java.util.Scanner;
+
+public class CNFConverter {
+
+    // Function to apply De Morgan's Laws
+    public static String applyDeMorgan(String expression) {
+        expression = expression.replace("!(A|B)", "(!A&!B)");
+        expression = expression.replace("!(A&B)", "(!A|!B)");
+        return expression;
+    }
+
+    // Function to distribute OR over AND
+    public static String distributeOrOverAnd(String expression) {
+        if (expression.contains("|") && expression.contains("&")) {
+            String[] parts = expression.split("\\|");
+            String left = parts[0].trim();
+            String right = parts[1].trim();
+
+            if (left.contains("&")) {
+                String[] andParts = left.split("&");
+                return "(" + andParts[0].trim() + "|" + right + ")&(" + andParts[1].trim() + "|" + right + ")";
+            } else if (right.contains("&")) {
+                String[] andParts = right.split("&");
+                return "(" + left + "|" + andParts[0].trim() + ")&(" + left + "|" + andParts[1].trim() + ")";
+            }
+        }
+        return expression;
+    }
+
+    // Main function to convert to CNF
+    public static String convertToCNF(String expression) {
+        // Step 1: Apply De Morgan's Laws
+        expression = applyDeMorgan(expression);
+
+        // Step 2: Distribute OR over AND
+        expression = distributeOrOverAnd(expression);
+
+        // Return simplified CNF
+        return expression;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input logical expression
+        System.out.println("Enter a logical expression (e.g., A|(B&C)): ");
+        String input = scanner.nextLine();
+
+        // Convert to CNF
+        String cnf = convertToCNF(input);
+
+        // Output CNF
+        System.out.println("CNF Form: " + cnf);
+
+        scanner.close();
+    }
+}
+
+2. DNF:
+
+import java.util.Scanner;
+
+public class DNFConverter {
+
+    // Function to apply De Morgan's Laws
+    public static String applyDeMorgan(String expression) {
+        expression = expression.replace("!(A|B)", "(!A&!B)");
+        expression = expression.replace("!(A&B)", "(!A|!B)");
+        return expression;
+    }
+
+    // Function to distribute AND over OR
+    public static String distributeAndOverOr(String expression) {
+        if (expression.contains("&") && expression.contains("|")) {
+            String[] parts = expression.split("&");
+            String left = parts[0].trim();
+            String right = parts[1].trim();
+
+            if (left.contains("|")) {
+                String[] orParts = left.split("\\|");
+                return "(" + orParts[0].trim() + "&" + right + ")|(" + orParts[1].trim() + "&" + right + ")";
+            } else if (right.contains("|")) {
+                String[] orParts = right.split("\\|");
+                return "(" + left + "&" + orParts[0].trim() + ")|(" + left + "&" + orParts[1].trim() + ")";
+            }
+        }
+        return expression;
+    }
+
+    // Main function to convert to DNF
+    public static String convertToDNF(String expression) {
+        // Step 1: Apply De Morgan's Laws
+        expression = applyDeMorgan(expression);
+
+        // Step 2: Distribute AND over OR
+        expression = distributeAndOverOr(expression);
+
+        // Return simplified DNF
+        return expression;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input logical expression
+        System.out.println("Enter a logical expression (e.g., A&(B|C)): ");
+        String input = scanner.nextLine();
+
+        // Convert to DNF
+        String dnf = convertToDNF(input);
+
+        // Output DNF
+        System.out.println("DNF Form: " + dnf);
+
+        scanner.close();
+    }
+}
+
